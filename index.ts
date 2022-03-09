@@ -20,8 +20,13 @@ app.get('/users', async (req, res) => {
   try {
 
     const users = await prisma.user.findMany({
-      include: { 
-        items: { include : { item: true } } , orders: true 
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        items: { 
+          include: { item: true } 
+        } , orders: true 
       }
     })
 
@@ -44,8 +49,14 @@ app.get('/users/:id', async (req, res) => {
 
     const user = await prisma.user.findFirst({
       where: { id: idParam },
-      include: { 
-        items: { include : { item: true } } , orders: true }
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        items: { 
+          include: { item: true } 
+        } , orders: true 
+      }
     })
 
     if (user) {
@@ -323,8 +334,13 @@ app.get('/items', async (req, res) => {
   try {
 
     const items = await prisma.item.findMany({
-      include: { 
-        users: { include : { user: true } } 
+      select: {
+        id: true,
+        title: true,
+        image: true,
+        users: { 
+          include: { user: true } 
+        }
       }
     })
 
@@ -347,7 +363,14 @@ app.get('/items/:id', async (req, res) => {
 
     const item = await prisma.item.findFirst({
       where: { id: idParam },
-      include: { users: { include : { user: true } } }
+      select: {
+        id: true,
+        title: true,
+        image: true,
+        users: { 
+          include: { user: true } 
+        }
+      }
     })
 
     if (item) {
