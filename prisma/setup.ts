@@ -25,31 +25,37 @@ const users = [
 const userItems = [
   {
     id: 1,
+    quantity: 14,
     userId: 1,
     itemId: 2
   },
   {
     id: 2,
+    quantity: 3,
     userId: 1,
     itemId: 3
   },
   {
     id: 3,
+    quantity: 23,
     userId: 3,
     itemId: 1
   },
   {
     id: 4,
+    quantity: 3,
     userId: 3,
     itemId: 2
   },
   {
     id: 5,
+    quantity: 1,
     userId: 2,
     itemId: 2
   },
   {
     id: 6,
+    quantity: 36,
     userId: 2,
     itemId: 3
   }
@@ -73,28 +79,9 @@ const items = [
   }
 ]
 
-const orders = [
-    {
-        id: 1,
-        quantity: 14,
-        userId: 1
-    },
-    {
-        id: 2,
-        quantity: 3,
-        userId: 2
-    },
-    {
-        id: 3,
-        quantity: 6,
-        userId: 3
-    }
-]
-
 async function createStuff () {
 
   await prisma.userItem.deleteMany()
-  await prisma.order.deleteMany()
   await prisma.user.deleteMany()
   await prisma.item.deleteMany()
 
@@ -108,10 +95,6 @@ async function createStuff () {
 
   for (const userItem of userItems) {
     await prisma.userItem.create({ data: userItem })
-  }
-
-  for (const order of orders) {
-    await prisma.order.create({ data: order })
   }
 
 }

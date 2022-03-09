@@ -15,11 +15,11 @@ model User {
   email       String        @unique
   name        String
   items       UserItem[]
-  orders      Order[]
 }
 
 model UserItem {
   id      Int     @id @default(autoincrement())
+  quantity Int    @default(0)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId  Int
   item    Item    @relation(fields: [itemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -31,11 +31,4 @@ model Item {
   title       String        @unique
   image       String
   users       UserItem[]
-}
-
-model Order {
-  id          Int           @id @default(autoincrement())
-  quantity    Int
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)                     
-  userId      Int        
 }

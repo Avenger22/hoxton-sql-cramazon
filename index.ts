@@ -26,7 +26,7 @@ app.get('/users', async (req, res) => {
         name: true,
         items: { 
           include: { item: true } 
-        } , orders: true 
+        } 
       }
     })
 
@@ -55,7 +55,7 @@ app.get('/users/:id', async (req, res) => {
         name: true,
         items: { 
           include: { item: true } 
-        } , orders: true 
+        }
       }
     })
 
@@ -225,9 +225,10 @@ app.get('/userItems/:id', async (req, res) => {
 
 app.post('/userItems', async (req, res) => {
     
-  const { userId, itemId } = req.body
+  const { quantity, userId, itemId } = req.body
   
   const newUserItem = {
+    quantity: quantity,
     userId: userId,
     itemId: itemId
   }
@@ -301,9 +302,10 @@ app.delete('/userItems/:id', async (req, res) => {
 app.patch('/userHobbys/:id', async (req, res) => {
 
   const idParam = req.params.id;
-  const { userId, itemId } = req.body
+  const { quantity, userId, itemId } = req.body
 
   const userItemData = {
+    quantity: quantity,
     userId: userId,
     itemId: itemId
   }
@@ -485,140 +487,6 @@ app.patch('/items/:id', async (req, res) => {
     })
 
     res.send(item)
-
-  } 
-  
-  catch(error) {
-    res.status(404).send({message: error})
-  }
-
-})
-// #endregion
-
-// #region "orders endpoints"
-app.get('/orders', async (req, res) => {
-
-  try {
-
-    const orders = await prisma.order.findMany({
-      include: { user: true }
-    })
-
-    res.send(orders)
-
-  }
-
-  catch(error) {
-    //@ts-ignore
-    res.status(400).send(`<prev>${error.message}</prev>`)
-  }
-
-})
-
-app.get('/orders/:id', async (req, res) => {
-
-  const idParam = Number(req.params.id)
-
-  try {
-
-    const order = await prisma.order.findFirst({
-      where: { id: idParam },
-      include: { user: true}
-    })
-
-    if (order) {
-      res.send(order)
-    } 
-    
-    else {
-      res.status(404).send({ error: 'order not found.' })
-    }
-
-  }
-
-  catch(error){
-    //@ts-ignore
-    res.status(400).send(`<prev>${error.message}</prev>`)
-  }
-
-})
-
-app.post('/orders', async (req, res) => {
-    
-  const { quantity, userId } = req.body
-  
-  const newOrder = {
-    quantity: quantity,
-    userId: userId
-  }
-
-  try {
-    const createdItem = await prisma.order.create({data: newOrder})
-    res.send(createdItem) 
-  }
-
-  catch(error) {
-    //@ts-ignore
-    res.status(400).send(`<prev>${error.message}</prev>`)
-  }
-
-})
-
-app.delete('/orders/:id', async (req, res) => {
-
-  const idParam = req.params.id
-  
-  try {
-
-    const order = await prisma.order.findFirst({
-      where: {
-        id: Number(idParam)
-      }
-    })
-
-    if (order) {
-
-      await prisma.order.delete({ 
-        where: { id: Number(idParam) }
-      })
-
-      res.send({ message: 'order deleted.' })
-
-    }
-
-    else {
-      res.status(404).send({ error: 'order not found.' })
-    }
-
-  }
-
-  catch(error) {
-    //@ts-ignore
-    res.status(400).send(`<prev>${error.message}</prev>`)
-  }
-
-})
-
-app.patch('/orders/:id', async (req, res) => {
-
-  const idParam = req.params.id;
-  const { quantity, userId } = req.body
-  
-  const orderData = {
-    quantity: quantity,
-    userId: userId
-  }
-
-  try {
-
-    const order = await prisma.order.update({
-      where: {
-        id: Number(idParam),
-      },
-      data: orderData
-    })
-
-    res.send(order)
 
   } 
   
