@@ -181,12 +181,12 @@ app.patch('/users/:id', async (req, res) => {
 })
 // #endregion
 
-// #region 'userItems endpoints'
-app.get('/userItems', async (req, res) => {
+// #region 'orders endpoints'
+app.get('/orders', async (req, res) => {
 
   try {
-    const userItems = await prisma.userItem.findMany()
-    res.send(userItems)
+    const orders = await prisma.order.findMany()
+    res.send(orders)
   }
 
   catch(error) {
@@ -196,22 +196,22 @@ app.get('/userItems', async (req, res) => {
 
 })
 
-app.get('/userItems/:id', async (req, res) => {
+app.get('/orders/:id', async (req, res) => {
 
   const idParam = Number(req.params.id)
 
   try {
 
-    const userItem = await prisma.userItem.findFirst({
+    const order = await prisma.order.findFirst({
       where: { id: idParam }
     })
 
-    if (userItem) {
-      res.send(userItem)
+    if (order) {
+      res.send(order)
     } 
     
     else {
-      res.status(404).send({ error: 'userItem not found.' })
+      res.status(404).send({ error: 'order not found.' })
     }
 
   }
@@ -223,11 +223,11 @@ app.get('/userItems/:id', async (req, res) => {
 
 })
 
-app.post('/userItems', async (req, res) => {
+app.post('/orders', async (req, res) => {
     
   const { quantity, userId, itemId } = req.body
   
-  const newUserItem = {
+  const newOrder = {
     quantity: quantity,
     userId: userId,
     itemId: itemId
@@ -235,17 +235,17 @@ app.post('/userItems', async (req, res) => {
 
   try {
 
-    const userItemCheck = await prisma.userItem.findFirst({ where: { userId: newUserItem.userId, itemId: newUserItem.itemId } })
+    const orderCheck = await prisma.order.findFirst({ where: { userId: newOrder.userId, itemId: newOrder.itemId } })
     
-    if (userItemCheck) {
-      res.status(404).send({ error: 'UserItem has an already registered id combination try different combination.' })
+    if (orderCheck) {
+      res.status(404).send({ error: 'order has an already registered id combination try different combination.' })
     }
 
     else {
 
       try {
-        const createdUserItem = await prisma.userItem.create({data: newUserItem})
-        res.send(createdUserItem)
+        const createdOrder = await prisma.order.create({data: newOrder})
+        res.send(createdOrder)
       }
 
       catch(error) {
@@ -264,30 +264,30 @@ app.post('/userItems', async (req, res) => {
 
 })
 
-app.delete('/userItems/:id', async (req, res) => {
+app.delete('/orders/:id', async (req, res) => {
 
   const idParam = req.params.id
 
   try {
 
-    const userItem = await prisma.userItem.findFirst({
+    const order = await prisma.order.findFirst({
       where: {
         id: Number(idParam)
       }
     })
 
-    if (userItem) {
+    if (order) {
 
-      await prisma.userItem.delete({ 
+      await prisma.order.delete({ 
         where: { id: Number(idParam) }
       })
 
-      res.send({ message: 'userItem deleted.' })
+      res.send({ message: 'order deleted.' })
 
     }
 
     else {
-      res.status(404).send({ error: 'userItem not found.' })
+      res.status(404).send({ error: 'order not found.' })
     }
 
   }
@@ -299,12 +299,12 @@ app.delete('/userItems/:id', async (req, res) => {
 
 })
 
-app.patch('/userHobbys/:id', async (req, res) => {
+app.patch('/orders/:id', async (req, res) => {
 
   const idParam = req.params.id;
   const { quantity, userId, itemId } = req.body
 
-  const userItemData = {
+  const orderData = {
     quantity: quantity,
     userId: userId,
     itemId: itemId
@@ -312,14 +312,14 @@ app.patch('/userHobbys/:id', async (req, res) => {
 
   try {
 
-    const userItem = await prisma.userItem.update({
+    const order = await prisma.order.update({
       where: {
         id: Number(idParam),
       },
-      data: userItemData
+      data: orderData
     })
 
-    res.send(userItem)
+    res.send(order)
 
   } 
   

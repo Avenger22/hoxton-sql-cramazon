@@ -14,12 +14,14 @@ model User {
   id          Int           @id @default(autoincrement())
   email       String        @unique
   name        String
-  items       UserItem[]
+  items       Order[]
 }
 
-model UserItem {
+model Order {
   id      Int     @id @default(autoincrement())
   quantity Int    @default(0)
+  dateCreated DateTime @default(now())
+  paymentMethod String @default("online")
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId  Int
   item    Item    @relation(fields: [itemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -30,5 +32,6 @@ model Item {
   id          Int           @id @default(autoincrement())
   title       String        @unique
   image       String
-  users       UserItem[]
+  price       Float        @default(0.00)
+  users       Order[]
 }
